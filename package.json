@@ -1,0 +1,20 @@
+{
+  "name": "@codecn/inertia-field-input",
+  "version": "1.0.0",
+  "description": "Wrapper around ShadCN for common inputs for inertia projects",
+  "homepage": "https://github.com/ChristianJoniel/inertia-field-input#readme",
+  "bugs": {
+    "url": "https://github.com/ChristianJoniel/inertia-field-input/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChristianJoniel/inertia-field-input.git"
+  },
+  "license": "ISC",
+  "author": "Christian Negron",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
