@@ -38,6 +38,7 @@ export interface FieldInputProps<TForm extends Record<string, any>> extends Omit
   form: ReturnType<typeof useForm<TForm>>;
   showError?: boolean;
   type?: AllowedInputTypes;
+  placeholder?: string;
 }
 
 const DefaultLabel = React.forwardRef<
@@ -83,6 +84,17 @@ export function FieldInput<TForm extends Record<string, any>>({
     form.setData(name, e.target.value as TForm[keyof TForm & string]);
   };
 
+  function getPlaceholder(type: AllowedInputTypes): string | undefined {
+    switch (type) {
+      case 'email': 
+        return 'm@example.com';
+      // case 'password':
+        // return 'Password';
+      default:
+        return undefined;
+    }
+  }
+
   return (
     <div className="space-y-2">
       {label !== null && (
@@ -100,11 +112,12 @@ export function FieldInput<TForm extends Record<string, any>>({
         error={!!error}
         className={className}
         aria-invalid={error ? true : false}
+        placeholder={props.placeholder || getPlaceholder(type)}
         {...props}
       />
 
       {showError && error && (
-        <p className="text-sm text-red-500">{error}</p>
+        <p className="text-sm font-medium text-destructive">{error}</p>
       )}
     </div>
   );
