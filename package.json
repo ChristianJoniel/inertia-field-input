@@ -1,20 +1,54 @@
 {
   "name": "@codecn/inertia-field-input",
-  "version": "1.0.0",
-  "description": "Wrapper around ShadCN for common inputs for inertia projects",
-  "homepage": "https://github.com/ChristianJoniel/inertia-field-input#readme",
-  "bugs": {
-    "url": "https://github.com/ChristianJoniel/inertia-field-input/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ChristianJoniel/inertia-field-input.git"
-  },
-  "license": "ISC",
-  "author": "Christian Negron",
+  "version": "0.1.0",
+  "description": "An opinionated form input component for Laravel + Inertia.js + React + shadcn/ui projects",
   "type": "module",
-  "main": "index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "prepare": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "react",
+    "laravel",
+    "inertia",
+    "shadcn",
+    "form",
+    "input"
+  ],
+  "peerDependencies": {
+    "@inertiajs/react": "^2.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": ">=20.0.0",
+    "@types/react": "^18.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "MIT",
+  "sideEffects": false,
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.0.1"
   }
 }
