@@ -1,6 +1,16 @@
 # @codecn/inertia-field-input
 
-An opinionated form input component for Laravel + Inertia.js + React + shadcn/ui projects. This package provides a wrapper around shadcn's input component that integrates with Inertia's form handling and provides built-in validation display.
+An opinionated form input component for Laravel + Inertia.js + React projects. This package provides a styled input component that integrates with Inertia's form handling and provides built-in validation display, following shadcn/ui design patterns.
+
+## Features
+
+- 🎨 Styled with Tailwind CSS
+- 🔄 Integrates with Inertia.js form handling
+- ✨ Built-in error handling and validation display
+- 🎯 TypeScript support
+- 🎭 Customizable styling with class-variance-authority
+- 📱 Responsive design
+- 🌗 Supports both React 18 and 19
 
 ## Requirements
 
@@ -8,7 +18,7 @@ This package assumes your project has:
 
 - Laravel backend
 - Inertia.js with React
-- shadcn/ui components installed
+- Tailwind CSS
 - TypeScript support
 
 ## Installation
@@ -17,6 +27,8 @@ This package assumes your project has:
 npm install @codecn/inertia-field-input
 # or
 yarn add @codecn/inertia-field-input
+# or
+pnpm add @codecn/inertia-field-input
 ```
 
 ## Usage
@@ -24,11 +36,14 @@ yarn add @codecn/inertia-field-input
 ```tsx
 import { FieldInput } from '@codecn/inertia-field-input';
 import { useForm } from '@inertiajs/react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
-export default function MyForm() {
-  const form = useForm({
+interface FormData {
+  email: string;
+  password: string;
+}
+
+export default function LoginForm() {
+  const form = useForm<FormData>({
     email: '',
     password: '',
   });
@@ -39,28 +54,23 @@ export default function MyForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <FieldInput
         name="email"
-        label="Email"
         type="email"
+        label="Email"
         form={form}
-        placeholder="Enter your email"
-        Input={Input}
-        Label={Label}
+        placeholder="m@example.com"
       />
       
       <FieldInput
         name="password"
-        label="Password"
         type="password"
+        label="Password"
         form={form}
-        placeholder="Enter your password"
-        Input={Input}
-        Label={Label}
       />
       
-      <button type="submit">Submit</button>
+      <button type="submit">Login</button>
     </form>
   );
 }
@@ -68,23 +78,47 @@ export default function MyForm() {
 
 ## Props
 
-The component accepts all props that shadcn's Input component accepts, plus:
+The component accepts the following props:
 
 - `name` (required): The field name in the form data
-- `label`: Optional label text
+- `label`: Optional label text (use `null` to hide label)
 - `labelProps`: Props to pass to the Label component
 - `form` (required): The Inertia form instance
 - `showError`: Whether to show validation errors (defaults to true)
-- `Input` (required): The shadcn Input component
-- `Label` (required): The shadcn Label component
+- `type`: Input type ('text' | 'email' | 'password' | 'tel' | 'number' | 'url')
+- `placeholder`: Input placeholder text
+- `className`: Additional CSS classes for the input
+
+Plus all standard HTML input attributes except 'name', 'form', 'value', and 'onChange' which are handled internally.
 
 ## Styling
 
-The component uses shadcn's styling by default and adds:
+The component uses Tailwind CSS with class-variance-authority for styling. It includes:
 
-- Red border for invalid fields
-- Error message display below the input
+- Modern, clean input design
+- Error states with red border
+- Focus states with ring
+- Disabled states
+- Responsive text sizes
 - Proper spacing between label, input, and error message
+
+You can customize the styling by:
+1. Passing a `className` prop to override specific styles
+2. Using Tailwind's configuration to modify the base styles
+
+## Error Handling
+
+The component automatically handles Inertia form errors:
+
+```tsx
+<FieldInput
+  name="email"
+  label="Email"
+  form={form}
+  // Will show error message from form.errors.email if present
+  showError={true} // default is true
+/>
+```
 
 ## Development
 
@@ -100,17 +134,33 @@ To develop with watch mode:
 npm run dev
 ```
 
-## Publishing
+## TypeScript Support
 
-This package is published under the `@codecn` scope. To publish:
+The component is fully typed and supports generic form data types:
 
-```bash
-npm login # if not already logged in
-npm publish
+```tsx
+interface UserForm {
+  name: string;
+  email: string;
+  age: number;
+}
+
+const form = useForm<UserForm>({
+  name: '',
+  email: '',
+  age: 0,
+});
+
+<FieldInput<UserForm>
+  name="email" // TypeScript will ensure this matches UserForm keys
+  form={form}
+/>
 ```
-
-Note: Make sure you have access to the `@codecn` organization on npm.
 
 ## License
 
-MIT 
+MIT
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. 
