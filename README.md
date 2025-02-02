@@ -58,7 +58,6 @@ export default function LoginForm() {
       <FieldInput
         name="email"
         type="email"
-        label="Email"
         form={form}
         placeholder="m@example.com"
       />
@@ -66,7 +65,13 @@ export default function LoginForm() {
       <FieldInput
         name="password"
         type="password"
-        label="Password"
+        label="Your Password"
+        form={form}
+      />
+
+      <FieldInput
+        name="search"
+        label={null}
         form={form}
       />
       
@@ -78,18 +83,44 @@ export default function LoginForm() {
 
 ## Props
 
-The component accepts the following props:
+### Required Props
 
-- `name` (required): The field name in the form data
-- `label`: Optional label text (use `null` to hide label)
-- `labelProps`: Props to pass to the Label component
-- `form` (required): The Inertia form instance
-- `showError`: Whether to show validation errors (defaults to true)
-- `type`: Input type ('text' | 'email' | 'password' | 'tel' | 'number' | 'url')
-- `placeholder`: Input placeholder text
-- `className`: Additional CSS classes for the input
+- `name`: The field name in the form data. Must match a key in your form data object.
+- `form`: The Inertia form instance from `useForm()`.
 
-Plus all standard HTML input attributes except 'name', 'form', 'value', and 'onChange' which are handled internally.
+### Optional Props
+
+- `label`: Controls the input label behavior:
+  - `undefined` (default): Automatically generates a label by capitalizing the `name` prop (e.g., "email" becomes "Email")
+  - `string`: Uses the provided text as the label (e.g., `label="Your Email Address"`)
+  - `null`: Explicitly removes the label element and its associated spacing
+
+- `labelProps`: Props to pass to the Label component when `label` is not null.
+
+- `showError` (default: `true`): Controls error message display:
+  - `true`: Shows validation errors from `form.errors[name]` below the input
+  - `false`: Hides error messages but still applies error styling to the input
+
+- `type` (default: `"text"`): Input type attribute. Supports: `"text"`, `"email"`, `"password"`, `"tel"`, `"number"`, `"url"`
+
+- `placeholder`: Placeholder text shown when the input is empty.
+
+- `className`: Additional CSS classes for the input wrapper.
+
+### HTML Input Props
+
+The component accepts standard HTML input attributes except:
+- `name`: Use the required `name` prop instead
+- `value` and `onChange`: Managed by the form instance
+- `type`: Use the typed `type` prop instead
+
+Common HTML props you might use:
+- `disabled`
+- `required`
+- `maxLength`
+- `min`/`max` (for numeric inputs)
+- `pattern`
+- `autoComplete`
 
 ## Styling
 

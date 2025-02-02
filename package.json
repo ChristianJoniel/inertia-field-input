@@ -1,6 +1,6 @@
 {
   "name": "@codecn/inertia-field-input",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "An opinionated form input component for Laravel + Inertia.js + React + shadcn/ui projects",
   "type": "module",
   "main": "./dist/index.cjs",
