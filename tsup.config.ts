@@ -12,8 +12,11 @@ export default defineConfig({
   external: [
     'react',
     '@inertiajs/react',
-    '@/components/ui/input',
-    '@/components/ui/label'
+    'class-variance-authority',
+    'tailwind-merge',
+    'clsx',
+    'cva',
+    'react-dom'
   ],
   banner: {
     js: '"use client";',
