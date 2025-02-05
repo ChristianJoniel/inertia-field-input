@@ -39,6 +39,8 @@ export interface FieldInputProps<TForm extends Record<string, any>> extends Omit
   showError?: boolean;
   type?: AllowedInputTypes;
   placeholder?: string;
+  Input?: React.ComponentType<BaseInputProps>;
+  Label?: React.ComponentType<BaseLabelProps>;
 }
 
 const DefaultLabel = React.forwardRef<
@@ -67,6 +69,7 @@ const DefaultInput = React.forwardRef<
 
 DefaultInput.displayName = 'Input';
 
+
 export function FieldInput<TForm extends Record<string, any>>({
   name,
   label,
@@ -75,6 +78,8 @@ export function FieldInput<TForm extends Record<string, any>>({
   showError = true,
   className,
   type = 'text',
+  Input,
+  Label,
   ...props
 }: FieldInputProps<TForm>) {
   const error = form.errors[name];
@@ -83,6 +88,9 @@ export function FieldInput<TForm extends Record<string, any>>({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     form.setData(name, e.target.value as TForm[keyof TForm & string]);
   };
+
+  const InputComponent  = Input ?? DefaultInput;
+  const LabelComponent = Label ?? DefaultLabel;
 
   function getPlaceholder(type: AllowedInputTypes): string | undefined {
     switch (type) {
@@ -98,12 +106,12 @@ export function FieldInput<TForm extends Record<string, any>>({
   return (
     <div className="space-y-2">
       {label !== null && (
-        <DefaultLabel htmlFor={name} {...labelProps}>
+        <LabelComponent htmlFor={name} {...labelProps}>
           {label || name.charAt(0).toUpperCase() + name.slice(1)}
-        </DefaultLabel>
+        </LabelComponent>
       )}
 
-      <DefaultInput
+      <InputComponent
         id={name}
         name={name}
         type={type}
