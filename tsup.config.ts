@@ -16,6 +16,9 @@ export default defineConfig({
     options.alias = {
       '@': './src'
     };
+    options.banner = {
+      js: '/* eslint-disable */\n"use client";\n',
+    };
   },
   external: [
     'react',
@@ -31,11 +34,13 @@ export default defineConfig({
     'tailwind-merge',
     'clsx',
     'lucide-react',
-    'cmdk'
+    'cmdk',
+    'lucide-react/*',
+    '@radix-ui/*',
+    'cmdk/*',
+    'dayjs',
+    'dayjs-plugin-utc'
   ],
-  banner: {
-    js: '"use client";',
-  },
   outExtension({ format }) {
     return {
       js: format === 'cjs' ? '.cjs' : '.js'
@@ -43,5 +48,6 @@ export default defineConfig({
   },
   env: {
     NODE_ENV: process.env.NODE_ENV || 'production'
-  }
+  },
+  noExternal: [/.*/]
 }); 

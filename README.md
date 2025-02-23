@@ -112,6 +112,268 @@ export default function LoginForm() {
 }
 ```
 
+## More Examples
+
+### Basic Form Fields
+
+```tsx
+// Regular text input with automatic label
+<FieldInput
+  name="username"
+  form={form}
+/>
+
+// Email input with placeholder
+<FieldInput
+  name="email"
+  type="email"
+  form={form}
+  placeholder="john@example.com"
+/>
+
+// Password input with custom label
+<FieldInput
+  name="password"
+  type="password"
+  form={form}
+  label="Create a Password"
+/>
+
+// Number input with min/max
+<FieldInput
+  name="age"
+  type="number"
+  form={form}
+  min={18}
+  max={100}
+/>
+
+// URL input with custom styling
+<FieldInput
+  name="website"
+  type="url"
+  form={form}
+  className="w-full md:w-2/3 lg:w-1/2"
+/>
+```
+
+### Checkbox Examples
+
+```tsx
+// Basic checkbox with label after
+<FieldInput
+  type="checkbox"
+  name="subscribe"
+  form={form}
+  label="Subscribe to newsletter"
+  labelAfter
+/>
+
+// Checkbox with custom label props
+<FieldInput
+  type="checkbox"
+  name="terms"
+  form={form}
+  label="I agree to the Terms of Service"
+  labelAfter
+  labelProps={{
+    className: "font-medium text-sm text-gray-700"
+  }}
+/>
+
+// Disabled checkbox
+<FieldInput
+  type="checkbox"
+  name="premium"
+  form={form}
+  label="Premium features"
+  labelAfter
+  disabled
+/>
+```
+
+### Select/Autocomplete Examples
+
+```tsx
+// Basic select with simple options
+<FieldInput
+  type="select"
+  name="country"
+  form={form}
+  label="Country"
+  title="Select a country"
+  options={[
+    { label: 'United States', value: 'us' },
+    { label: 'Canada', value: 'ca' },
+    { label: 'Mexico', value: 'mx' },
+  ]}
+/>
+
+// Select with numeric values
+<FieldInput
+  type="select"
+  name="age_group"
+  form={form}
+  label="Age Group"
+  title="Select your age group"
+  options={[
+    { label: '18-24 years', value: 18 },
+    { label: '25-34 years', value: 25 },
+    { label: '35-44 years', value: 35 },
+  ]}
+/>
+
+// Select with custom styling
+<FieldInput
+  type="select"
+  name="category"
+  form={form}
+  label="Category"
+  title="Choose a category"
+  options={categories}
+  className="w-full max-w-xs"
+/>
+```
+
+### Date Inputs
+
+```tsx
+// Date input
+<FieldInput
+  type="date"
+  name="birthdate"
+  form={form}
+  label="Date of Birth"
+/>
+
+// DateTime input
+<FieldInput
+  type="datetime-local"
+  name="appointment"
+  form={form}
+  label="Appointment Time"
+/>
+```
+
+### Complex Form Example
+
+```tsx
+interface RegistrationForm {
+  username: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+  birthdate: string;
+  country: string;
+  subscribe: boolean;
+  preferences: string;
+}
+
+export default function RegistrationForm() {
+  const form = useForm<RegistrationForm>({
+    username: '',
+    email: '',
+    password: '',
+    confirm_password: '',
+    birthdate: '',
+    country: '',
+    subscribe: false,
+    preferences: '',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    form.post('/register');
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FieldInput
+          name="username"
+          form={form}
+          autoComplete="username"
+          required
+        />
+
+        <FieldInput
+          name="email"
+          type="email"
+          form={form}
+          autoComplete="email"
+          required
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FieldInput
+          name="password"
+          type="password"
+          form={form}
+          autoComplete="new-password"
+          required
+        />
+
+        <FieldInput
+          name="confirm_password"
+          type="password"
+          form={form}
+          label="Confirm Password"
+          autoComplete="new-password"
+          required
+        />
+      </div>
+
+      <FieldInput
+        type="date"
+        name="birthdate"
+        form={form}
+        label="Date of Birth"
+        required
+      />
+
+      <FieldInput
+        type="select"
+        name="country"
+        form={form}
+        label="Country"
+        title="Select your country"
+        options={countries}
+        required
+      />
+
+      <FieldInput
+        type="select"
+        name="preferences"
+        form={form}
+        label="Communication Preferences"
+        title="Select preference"
+        options={[
+          { label: 'Email', value: 'email' },
+          { label: 'Phone', value: 'phone' },
+          { label: 'SMS', value: 'sms' },
+        ]}
+      />
+
+      <FieldInput
+        type="checkbox"
+        name="subscribe"
+        form={form}
+        label="Subscribe to our newsletter"
+        labelAfter
+      />
+
+      <button
+        type="submit"
+        className="w-full px-4 py-2 bg-blue-600 text-white rounded-md"
+      >
+        Register
+      </button>
+    </form>
+  );
+}
+```
+
 ## Props
 
 ### Required Props

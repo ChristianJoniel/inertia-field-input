@@ -1,13 +1,11 @@
 import React, { useMemo } from 'react';
-import { ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Switch } from './ui/switch';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { ComboBox } from '@/Partials/ComboBox';
-import { cn } from '@/lib/utils';
-
+import { ComboBox } from '../Partials/ComboBox';
+import { cn } from '../lib/utils';
+import { createDateJS } from '../lib/dates';
 type InputType =
   | ({
     type?: 'text' | 'email' | 'password' | 'tel' | 'number' | 'url';
@@ -142,7 +140,6 @@ export function FieldInput<TForm extends Record<string, any>>({
             onCheckedChange={handleCheck}
           />
         );
-        break;
       case 'select':
         return (
           <ComboBox
@@ -151,7 +148,7 @@ export function FieldInput<TForm extends Record<string, any>>({
             title={props.title ?? name}
             options={props.options ?? []}
             defaultValue={value as string | number | undefined}
-            
+
           />
           // <Select
           //   id={name}
@@ -166,6 +163,17 @@ export function FieldInput<TForm extends Record<string, any>>({
           // />
         );
 
+      case 'datetime-local':
+      case 'date':
+        return (
+          <InputComponent
+            {...props}
+            id={name}
+            value={createDateJS(value as string, 'TZ').forDateInput()}
+            onChange={(e) => {
+              form.setData(name, createDateJS(e.target.value, 'UTC').forDateInput());
+            }}
+          />)
 
       default:
         return (
