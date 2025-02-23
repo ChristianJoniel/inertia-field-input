@@ -11,6 +11,9 @@ An opinionated form input component for Laravel + Inertia.js + React projects. T
 - 🎭 Customizable styling with class-variance-authority
 - 📱 Responsive design
 - 🌗 Supports both React 18 and 19
+- 🔄 Compatible with multiple Inertia.js versions
+- 🔍 Autocomplete select input
+- ✓ Checkbox support with custom styling
 
 ## Requirements
 
@@ -20,6 +23,13 @@ This package assumes your project has:
 - Inertia.js with React
 - Tailwind CSS
 - TypeScript support
+
+## Version Compatibility
+
+This package is designed to work with:
+- Inertia.js v1.x and v2.x
+- React 18.x and 19.x
+- TypeScript 4.x and 5.x
 
 ## Installation
 
@@ -40,13 +50,23 @@ import { useForm } from '@inertiajs/react';
 interface FormData {
   email: string;
   password: string;
+  remember: boolean;
+  country: string;
 }
 
 export default function LoginForm() {
   const form = useForm<FormData>({
     email: '',
     password: '',
+    remember: false,
+    country: '',
   });
+
+  const countries = [
+    { label: 'United States', value: 'us' },
+    { label: 'Canada', value: 'ca' },
+    { label: 'Mexico', value: 'mx' },
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,9 +90,20 @@ export default function LoginForm() {
       />
 
       <FieldInput
-        name="search"
-        label={null}
+        type="checkbox"
+        name="remember"
         form={form}
+        label="Remember me"
+        labelAfter
+      />
+
+      <FieldInput
+        type="select"
+        name="country"
+        form={form}
+        label="Country"
+        title="Select a country"
+        options={countries}
       />
       
       <button type="submit">Login</button>
@@ -90,22 +121,33 @@ export default function LoginForm() {
 
 ### Optional Props
 
+- `type` (default: `"text"`): Input type attribute. Supports:
+  - Basic types: `"text"`, `"email"`, `"password"`, `"tel"`, `"number"`, `"url"`
+  - Special types:
+    - `"checkbox"`: Renders a styled switch component
+    - `"select"`: Renders an autocomplete select input
+    - `"datetime-local"`, `"date"`: Date input types
+
 - `label`: Controls the input label behavior:
-  - `undefined` (default): Automatically generates a label by capitalizing the `name` prop (e.g., "email" becomes "Email")
-  - `string`: Uses the provided text as the label (e.g., `label="Your Email Address"`)
-  - `null`: Explicitly removes the label element and its associated spacing
+  - `undefined` (default): Automatically generates a label by capitalizing the `name` prop
+  - `string`: Uses the provided text as the label
+  - `null`: Explicitly removes the label element
 
-- `labelProps`: Props to pass to the Label component when `label` is not null.
+- `labelAfter`: When `true`, renders the label after the input (useful for checkboxes)
 
-- `showError` (default: `true`): Controls error message display:
-  - `true`: Shows validation errors from `form.errors[name]` below the input
-  - `false`: Hides error messages but still applies error styling to the input
+- For select inputs:
+  - `options`: Array of `{ label: string, value: any }` objects
+  - `title`: The placeholder text shown in the select button
+  ```tsx
+  const options = [
+    { label: 'Display Text', value: 'actual_value' },
+    { label: 'Another Option', value: 'another_value' }
+  ];
+  ```
 
-- `type` (default: `"text"`): Input type attribute. Supports: `"text"`, `"email"`, `"password"`, `"tel"`, `"number"`, `"url"`
-
-- `placeholder`: Placeholder text shown when the input is empty.
-
-- `className`: Additional CSS classes for the input wrapper.
+- `showError` (default: `true`): Controls error message display
+- `className`: Additional CSS classes for the input wrapper
+- `labelProps`: Props to pass to the Label component
 
 ### HTML Input Props
 

@@ -1,6 +1,6 @@
 {
   "name": "@codecn/inertia-field-input",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "An opinionated form input component for Laravel + Inertia.js + React + shadcn/ui projects",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -13,7 +13,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
@@ -31,17 +32,19 @@
     "input"
   ],
   "peerDependencies": {
-    "@inertiajs/react": "^2.0.0",
+    "@inertiajs/react": "^1.0.0 || ^2.0.0",
+    "@radix-ui/react-label": "^2.0.0",
+    "@radix-ui/react-switch": "^1.0.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "tailwind-merge": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": ">=20.0.0",
     "@types/react": "^18.2.0 || ^19.0.0",
     "@types/react-dom": "^18.2.0 || ^19.0.0",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
-    "tailwind-merge": "^3.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0"
   },
