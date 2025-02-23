@@ -235,23 +235,93 @@ export default function LoginForm() {
 />
 ```
 
-### Date Inputs
+### Date and Time Inputs
+
+The package includes built-in timezone handling for date and datetime inputs. It automatically converts between UTC and local timezone using dayjs.
 
 ```tsx
-// Date input
+interface FormWithDates {
+  appointment_date: string;
+  meeting_time: string;
+}
+
+const form = useForm<FormWithDates>({
+  appointment_date: '',
+  meeting_time: '',
+});
+
+// Basic date input
 <FieldInput
   type="date"
-  name="birthdate"
+  name="appointment_date"
   form={form}
-  label="Date of Birth"
+  label="Appointment Date"
 />
 
-// DateTime input
+// DateTime input with automatic timezone conversion
 <FieldInput
   type="datetime-local"
-  name="appointment"
+  name="meeting_time"
   form={form}
-  label="Appointment Time"
+  label="Meeting Time"
+/>
+```
+
+#### Timezone Handling
+
+The component automatically handles timezone conversions:
+
+1. When displaying a date:
+   - Converts UTC dates from the server to local timezone
+   - Uses the browser's timezone (via `dayjs.tz.guess()`)
+   - Formats the date appropriately for the input type
+
+2. When submitting a date:
+   - Converts local timezone input to UTC
+   - Ensures consistent date handling on the server
+
+Example with timezone conversion:
+
+```tsx
+// Server sends UTC date: "2024-03-15T14:30:00Z"
+// User in New York (UTC-5) sees: "2024-03-15 09:30 AM"
+// User in Paris (UTC+1) sees: "2024-03-15 15:30"
+
+<FieldInput
+  type="datetime-local"
+  name="meeting_time"
+  form={form}
+  label="Meeting Time"
+  // Value is automatically converted to local timezone
+  // When form is submitted, it's converted back to UTC
+/>
+```
+
+#### Date Formatting Options
+
+The date handling utility provides several formatting options:
+
+```tsx
+// Full datetime format (YYYY-MM-DD HH:mm:ss)
+<FieldInput
+  type="datetime-local"
+  name="full_date"
+  form={form}
+/>
+
+// Date only (YYYY-MM-DD)
+<FieldInput
+  type="date"
+  name="date_only"
+  form={form}
+/>
+
+// With custom placeholder
+<FieldInput
+  type="datetime-local"
+  name="meeting"
+  form={form}
+  placeholder="Select meeting time"
 />
 ```
 
@@ -388,7 +458,11 @@ export default function RegistrationForm() {
   - Special types:
     - `"checkbox"`: Renders a styled switch component
     - `"select"`: Renders an autocomplete select input
-    - `"datetime-local"`, `"date"`: Date input types
+    - `"datetime-local"`, `"date"`: Date inputs with timezone handling
+      - Automatically converts between UTC and local timezone
+      - Uses browser's timezone detection
+      - Formats dates appropriately for input display
+      - Handles form submission in UTC
 
 - `label`: Controls the input label behavior:
   - `undefined` (default): Automatically generates a label by capitalizing the `name` prop
