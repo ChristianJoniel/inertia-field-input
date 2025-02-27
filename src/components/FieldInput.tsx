@@ -61,6 +61,7 @@ export interface FieldInputProps<TForm extends Record<string, any>> extends Omit
   labelAfter?: boolean;
   tabIndex?: number;
   readOnly?: boolean;
+  required?: boolean;
 }
 
 const DefaultLabel = Label;
@@ -73,6 +74,7 @@ export function FieldInput<TForm extends Record<string, any>>({
   showError = true,
   className,
   type = 'text',
+  required = false,
   Input,
   Label,
   ...props
