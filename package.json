@@ -1,6 +1,6 @@
 {
   "name": "@codecn/inertia-field-input",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "An opinionated form input component for Laravel + Inertia.js + React + shadcn/ui projects",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -43,7 +43,7 @@
     "lucide-react": "^0.468.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "tailwind-merge": "^3.0.0",
+    "tailwind-merge": "^2.0.0 || ^3.0.0",
     "dayjs": "^1.11.13",
     "dayjs-plugin-utc": "^0.1.2"
   },
