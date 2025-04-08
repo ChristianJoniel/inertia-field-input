@@ -129,46 +129,46 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = memo(
   },
 );
 
-// New component that accepts a field object directly
-export const FormMultiSelectField: FC<
-  {
-    field: FieldObject;
-    label?: string;
-    options: Option[];
-    placeholder?: string;
-    hideLabel?: boolean;
-  } & Omit<HTMLAttributes<HTMLDivElement>, "onChange">
-> = memo(function FormMultiSelectField({
-  field,
-  label,
-  options,
-  placeholder = "Select options",
-  hideLabel = false,
-  ...props
-}) {
-  return (
-    <FormMultiSelect
-      id={field.id}
-      value={field.value}
-      onChange={field.onChange}
-      options={options}
-      placeholder={placeholder}
-      error={field.error}
-      label={label}
-      hideLabel={hideLabel}
-      {...props}
-    />
-  );
-});
+// // New component that accepts a field object directly
+// const FormMultiSelectField: FC<
+//   {
+//     field: FieldObject;
+//     label?: string;
+//     options: Option[];
+//     placeholder?: string;
+//     hideLabel?: boolean;
+//   } & Omit<HTMLAttributes<HTMLDivElement>, "onChange">
+// > = memo(function FormMultiSelectField({
+//   field,
+//   label,
+//   options,
+//   placeholder = "Select options",
+//   hideLabel = false,
+//   ...props
+// }) {
+//   return (
+//     <FormMultiSelect
+//       id={field.id}
+//       value={field.value}
+//       onChange={field.onChange}
+//       options={options}
+//       placeholder={placeholder}
+//       error={field.error}
+//       label={label}
+//       hideLabel={hideLabel}
+//       {...props}
+//     />
+//   );
+// });
 
-// Helper function to create a field that works with useForm
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function createMultiSelectField(field: any) {
-  return {
-    label: field.label,
-    name: field.name,
-    value: field.value,
-    onChange: field.onChange,
-    error: field.error,
-  };
-}
+// // Helper function to create a field that works with useForm
+// // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// function createMultiSelectField(field: any) {
+//   return {
+//     label: field.label,
+//     name: field.name,
+//     value: field.value,
+//     onChange: field.onChange,
+//     error: field.error,
+//   };
+// }
