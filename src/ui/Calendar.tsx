@@ -1,8 +1,9 @@
+import React from "react";
 import { ComponentProps } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
-
 import { clsx } from "clsx";
+
 export type CalendarProps = ComponentProps<typeof DayPicker>;
 
 function Calendar({
