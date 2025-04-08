@@ -1,4 +1,4 @@
-import { memo, useState, HTMLAttributes } from "react";
+import { memo, useState, HTMLAttributes, FC, ReactElement  } from "react";
 import { Label } from "./ui/Label";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/Popover";
 import {
@@ -12,7 +12,6 @@ import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import { XIcon } from "lucide-react";
 import { InputError } from "./ui/InputError";
-import { FC, ReactElement } from "react";
 
 interface Option {
   label: string;
