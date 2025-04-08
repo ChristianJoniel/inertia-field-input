@@ -9,6 +9,7 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   hideLabel?: boolean; // <-- if you want to visually hide but keep it for accessibility
+  InputComponent?: React.ComponentType<React.InputHTMLAttributes<HTMLInputElement>>;
 }
 
 export const FormInput = memo(function FormInput({
@@ -16,6 +17,7 @@ export const FormInput = memo(function FormInput({
   label,
   error,
   hideLabel = false,
+  InputComponent = Input,
   ...props
 }: FormInputProps) {
   return (
@@ -25,7 +27,7 @@ export const FormInput = memo(function FormInput({
           {label}
         </Label>
       )}
-      <Input {...props} />
+      <InputComponent {...props} />
       <InputError message={error} />
     </div>
   );

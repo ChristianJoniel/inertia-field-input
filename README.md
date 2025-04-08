@@ -40,6 +40,27 @@ import { FormInput, useField } from "@codecn/inertia-field-input";
   autoComplete="username"
   placeholder="Email address"
 />;
+
+// Using a custom input component
+// First, create your custom input component in your project
+// src/components/ui/CustomInput.tsx
+const CustomInput = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>((props, ref) => (
+  <input ref={ref} {...props} className="custom-input-class" />
+));
+
+// Then, create your own FormInput that extends the package's FormInput
+// src/components/FormInput.tsx
+import { FormInput as BaseFormInput } from "@codecn/inertia-field-input";
+import { CustomInput } from "./ui/CustomInput";
+
+export const FormInput = (props: React.ComponentProps<typeof BaseFormInput>) => (
+  <BaseFormInput {...props} InputComponent={CustomInput} />
+);
+
+// Now you can use your custom FormInput throughout your application
+import { FormInput } from "@/components/FormInput";
+
+<FormInput label="Custom Input" {...useField("custom")} />;
 ```
 
 ### FormSelect
