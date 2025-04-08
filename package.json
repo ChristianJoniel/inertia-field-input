@@ -3,19 +3,25 @@
   "version": "1.0.0",
   "description": "An opinionated form input component for Laravel + Inertia.js + React + shadcn/ui projects",
   "type": "module",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.es.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js"
-    }
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.cjs.js"
+    },
+    "./package.json": "./package.json"
   },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "watch": "tsup src/index.ts --format cjs,esm --dts --watch"
+    "build": "tsup src/index.ts --format cjs,esm --dts --external react --external react-dom --external @inertiajs/react --external @radix-ui/react-label --external @radix-ui/react-checkbox --external lucide-react --external react-day-picker --external @radix-ui/react-popover --external @radix-ui/react-select --external @radix-ui/react-dialog --external cmdk --external clsx --external date-fns --external class-variance-authority",
+    "watch": "tsup src/index.ts --format cjs,esm --dts --external react --external react-dom --external @inertiajs/react --external @radix-ui/react-label --external @radix-ui/react-checkbox --external lucide-react --external react-day-picker --external @radix-ui/react-popover --external @radix-ui/react-select --external @radix-ui/react-dialog --external cmdk --external clsx --external date-fns --external class-variance-authority --watch"
   },
   "peerDependencies": {
     "@inertiajs/react": "^1.0.0 || ^2.0.0",
