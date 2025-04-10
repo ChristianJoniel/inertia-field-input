@@ -1,74 +1,85 @@
-import React from "react";
-import { ComponentProps } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker } from "react-day-picker";
-import { clsx } from "clsx";
+import * as React from "react";
+import { DayFlag, DayPicker, DropdownProps, SelectionState, UI } from 'react-day-picker';
 
-export type CalendarProps = ComponentProps<typeof DayPicker>;
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Select } from '@radix-ui/react-select';
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
+import { ScrollArea } from './scroll-area';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 
-function Calendar({
-  className,
-  classNames,
-  showOutsideDays = true,
-  ...props
-}: CalendarProps) {
+export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+
+function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={clsx("p-3", className)}
+      className={cn('p-3', className)}
       classNames={{
-        months: "flex flex-col sm:flex-row space-y-4 sm:space-y-0",
-        month: "space-y-4 ",
-        month_caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium",
-        // nav: "space-x-1 flex items-center",
-        button_next: clsx(
-          "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2",
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-          "absolute right-5 z-50",
+        [UI.Months]: 'relative',
+        [UI.Month]: 'space-y-4 ml-0',
+        [UI.MonthCaption]: 'flex justify-center items-center h-7',
+        [UI.CaptionLabel]: 'text-sm font-medium',
+        [UI.PreviousMonthButton]: cn(
+          buttonVariants({ variant: 'outline' }),
+          'absolute left-1 top-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
         ),
-        button_previous: clsx(
-          "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2",
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-          "absolute left-5 z-50",
+        [UI.NextMonthButton]: cn(
+          buttonVariants({ variant: 'outline' }),
+          'absolute right-1 top-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
         ),
-        month_grid: "w-full border-collapse space-y-1",
-        weekdays: "flex",
-        weekday:
-          "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
-        week: "flex w-full mt-2",
-        day: clsx(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md",
-          props.mode === "range"
-            ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
-            : "[&:has([aria-selected])]:rounded-md",
+        [UI.MonthGrid]: 'w-full border-collapse space-y-1',
+        [UI.Weekdays]: 'flex',
+        [UI.Weekday]: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
+        [UI.Week]: 'flex w-full mt-2',
+        [UI.Day]:
+          'h-9 w-9 text-center rounded-md text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+        [UI.DayButton]: cn(
+          buttonVariants({ variant: 'ghost' }),
+          'h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-primary hover:text-primary-foreground'
         ),
-        day_button: clsx(
-          "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground",
-          "h-8 w-8 p-0 font-normal aria-selected:opacity-100",
-        ),
-        range_start: "day-range-start",
-        range_end: "day-range-end",
-        selected:
-          "rounded bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        today: "rounded bg-accent text-accent-foreground",
-        outside:
-          "day-outside text-muted-foreground aria-selected:bg-accent/50 aria-selected:text-muted-foreground",
-        disabled: "text-muted-foreground opacity-50",
-        range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
-        hidden: "invisible",
+        [UI.Dropdowns]: 'flex items-center gap-1',
+        [SelectionState.range_end]: 'day-range-end',
+        [SelectionState.selected]:
+          'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+        [SelectionState.range_middle]: 'aria-selected:bg-accent aria-selected:text-accent-foreground',
+        [DayFlag.today]: 'text-accent bg-muted',
+        [DayFlag.outside]:
+          'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
+        [DayFlag.disabled]: 'text-muted-foreground opacity-50',
+        [DayFlag.hidden]: 'invisible',
         ...classNames,
       }}
       components={{
-        Chevron: (props) => {
-          if (props.orientation === "left") {
-            return (
-              <ChevronLeft className={clsx("h-4 w-4", className)} {...props} />
-            );
-          }
+        Chevron: ({ ...props }) => <Chevron {...props} />,
+        Dropdown: ({ value, onChange, ...props }: DropdownProps) => {
+          const selected = props.options?.find((child) => child.value === value);
+          const handleChange = (value: string) => {
+            const changeEvent = {
+              target: { value },
+            } as React.ChangeEvent<HTMLSelectElement>;
+            onChange?.(changeEvent);
+          };
           return (
-            <ChevronRight className={clsx("h-4 w-4", className)} {...props} />
+            <Select
+              value={value?.toString()}
+              onValueChange={(value) => {
+                handleChange(value);
+              }}
+            >
+              <SelectTrigger className="pr-1.5 focus:ring-0">
+                <SelectValue>{selected?.label}</SelectValue>
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <ScrollArea className="h-80">
+                  {props.options?.map((option, id: number) => (
+                    <SelectItem key={`${option.value}-${id}`} value={option.value?.toString() ?? ''}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </ScrollArea>
+              </SelectContent>
+            </Select>
           );
         },
       }}
@@ -76,6 +87,22 @@ function Calendar({
     />
   );
 }
-Calendar.displayName = "Calendar";
+
+const Chevron = ({ orientation = 'left' }) => {
+  switch (orientation) {
+    case 'left':
+      return <ChevronLeftIcon className="h-4 w-4" />;
+    case 'right':
+      return <ChevronRightIcon className="h-4 w-4" />;
+    case 'up':
+      return <ChevronUpIcon className="h-4 w-4" />;
+    case 'down':
+      return <ChevronDownIcon className="h-4 w-4" />;
+    default:
+      return null;
+  }
+};
+
+Calendar.displayName = 'Calendar';
 
 export { Calendar };
