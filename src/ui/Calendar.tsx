@@ -1,12 +1,12 @@
-import * as React from "react";
+import React from "react";
+// import { ComponentProps } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
 import { DayFlag, DayPicker, DropdownProps, SelectionState, UI } from 'react-day-picker';
-
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { clsx } from "clsx";
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/Select';
+import { buttonVariants } from '../ui/Button';
 import { Select } from '@radix-ui/react-select';
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
-import { ScrollArea } from './scroll-area';
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
+
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -14,17 +14,17 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn('p-3', className)}
+      className={clsx('p-3', className)}
       classNames={{
         [UI.Months]: 'relative',
         [UI.Month]: 'space-y-4 ml-0',
         [UI.MonthCaption]: 'flex justify-center items-center h-7',
         [UI.CaptionLabel]: 'text-sm font-medium',
-        [UI.PreviousMonthButton]: cn(
+        [UI.PreviousMonthButton]: clsx(
           buttonVariants({ variant: 'outline' }),
           'absolute left-1 top-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
         ),
-        [UI.NextMonthButton]: cn(
+        [UI.NextMonthButton]: clsx(
           buttonVariants({ variant: 'outline' }),
           'absolute right-1 top-0 h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
         ),
@@ -34,7 +34,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         [UI.Week]: 'flex w-full mt-2',
         [UI.Day]:
           'h-9 w-9 text-center rounded-md text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-        [UI.DayButton]: cn(
+        [UI.DayButton]: clsx(
           buttonVariants({ variant: 'ghost' }),
           'h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-primary hover:text-primary-foreground'
         ),
@@ -71,13 +71,13 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
                 <SelectValue>{selected?.label}</SelectValue>
               </SelectTrigger>
               <SelectContent position="popper">
-                <ScrollArea className="h-80">
-                  {props.options?.map((option, id: number) => (
-                    <SelectItem key={`${option.value}-${id}`} value={option.value?.toString() ?? ''}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </ScrollArea>
+                {/* <ScrollArea className="h-80"> */}
+                {props.options?.map((option, id: number) => (
+                  <SelectItem key={`${option.value}-${id}`} value={option.value?.toString() ?? ''}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+                {/* </ScrollArea> */}
               </SelectContent>
             </Select>
           );
@@ -91,13 +91,13 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
 const Chevron = ({ orientation = 'left' }) => {
   switch (orientation) {
     case 'left':
-      return <ChevronLeftIcon className="h-4 w-4" />;
+      return <ChevronLeft className="h-4 w-4" />;
     case 'right':
-      return <ChevronRightIcon className="h-4 w-4" />;
+      return <ChevronRight className="h-4 w-4" />;
     case 'up':
-      return <ChevronUpIcon className="h-4 w-4" />;
+      return <ChevronUp className="h-4 w-4" />;
     case 'down':
-      return <ChevronDownIcon className="h-4 w-4" />;
+      return <ChevronDown className="h-4 w-4" />;
     default:
       return null;
   }
