@@ -2,13 +2,16 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
 import { resolve } from "path";
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [
     react(),
     dts({
       insertTypesEntry: true,
+      include: ["src"],
+      exclude: ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"],
+      outputDir: "dist",
     }),
     tailwindcss(),
   ],
