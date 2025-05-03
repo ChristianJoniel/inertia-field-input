@@ -216,14 +216,17 @@ reset();
 A hook that provides field-specific functionality for form inputs and automatically handles error display.
 
 ```tsx
-import { useField } from "@codecn/inertia-field-input";
+import { useForm } from "@codecn/inertia-field-input";
 
+const { useField } = useForm({
+  name: '',
+  email: ''
+})
 // The useField hook returns an object with all necessary props for a form field
 // including value, onChange, error, and other attributes needed for the field
-const fieldProps = useField("name");
 
 // You can spread these props directly into your form components
-<FormInput label="Name" {...fieldProps} required />;
+<FormInput label="Name" {...useField('name')} required />;
 
 // You can also combine with additional props
 <FormInput label="Email" {...useField("email")} type="email" autoComplete="email" />;
@@ -255,10 +258,10 @@ public function store(Request $request)
 Here's a complete example of a form using the components and hooks:
 
 ```tsx
-import { useForm, useField, FormInput, FormSelect, FormCheckbox, FormMultiSelect } from "@codecn/inertia-field-input";
+import { useForm, FormInput, FormSelect, FormCheckbox, FormMultiSelect } from "@codecn/inertia-field-input";
 
 export default function UserForm() {
-  const { data, setData, errors, processing, post } = useForm({
+  const { useField, processing, post } = useForm({
     name: "",
     email: "",
     role: "",
