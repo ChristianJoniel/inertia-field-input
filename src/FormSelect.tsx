@@ -49,7 +49,7 @@ export const FormSelect = React.memo(function FormSelect({
   };
 
   return (
-    <div className="space-y-1">
+    <div className="grid gap-2">
       {label && (
         <Label htmlFor={name} className={hideLabel ? "sr-only" : ""}>
           {label}
