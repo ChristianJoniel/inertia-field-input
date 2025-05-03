@@ -14,7 +14,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={clsx('p-3', className)}
+      className={clsx('p-3 border border-border rounded-md', className)}
       classNames={{
         [UI.Months]: 'relative',
         [UI.Month]: 'space-y-4 ml-0',
@@ -43,7 +43,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         [SelectionState.selected]:
           'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
         [SelectionState.range_middle]: 'aria-selected:bg-accent aria-selected:text-accent-foreground',
-        [DayFlag.today]: 'text-accent bg-muted',
+        [DayFlag.today]: 'text-muted-foreground bg-muted',
         [DayFlag.outside]:
           'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
         [DayFlag.disabled]: 'text-muted-foreground opacity-50',
