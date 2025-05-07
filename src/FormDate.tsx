@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/Select";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { CalendarIcon, ClockIcon } from "lucide-react";
 import { InputError } from "./ui/InputError";
 import React, {
@@ -56,7 +56,7 @@ export const FormDate = memo(function FormDate({
   useEffect(() => {
     if (value && type === "datetime") {
       try {
-        const date = new Date(value);
+        const date = parseISO(value);
         if (!isNaN(date.getTime())) {
           // Extract time part for datetime
           let hours = date.getHours();
@@ -82,20 +82,31 @@ export const FormDate = memo(function FormDate({
 
     if (type === "datetime") {
       // For datetime, preserve the time part
-      const currentDate = value ? new Date(value) : new Date();
+      const currentDate = value ? parseISO(value) : new Date();
       const currentHours = currentDate.getHours();
       const currentMinutes = currentDate.getMinutes();
 
       date.setHours(currentHours, currentMinutes);
-      const isoString = date.toISOString();
+
+      // Format the date in ISO format while preserving the local timezone
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hourStr = String(date.getHours()).padStart(2, '0');
+      const minuteStr = String(date.getMinutes()).padStart(2, '0');
+      const secondStr = String(date.getSeconds()).padStart(2, '0');
+      const isoString = `${year}-${month}-${day}T${hourStr}:${minuteStr}:${secondStr}`;
 
       // Create a synthetic event directly
       const input = document.createElement("input");
       input.value = isoString;
       onChange({ target: input } as ChangeEvent<HTMLInputElement>);
     } else {
-      // For date only, just use the date part
-      const isoString = date.toISOString().split("T")[0];
+      // For date only, format the date in YYYY-MM-DD format
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const isoString = `${year}-${month}-${day}`;
 
       // Create a synthetic event directly
       const input = document.createElement("input");
@@ -111,7 +122,7 @@ export const FormDate = memo(function FormDate({
     if (!value) return;
 
     // Get the current date
-    const currentDate = new Date(value);
+    const currentDate = parseISO(value);
 
     // Convert 12-hour format to 24-hour
     let hourValue = parseInt(hours);
@@ -124,8 +135,14 @@ export const FormDate = memo(function FormDate({
     // Update the time part
     currentDate.setHours(hourValue, parseInt(minutes));
 
-    // Update the value
-    const isoString = currentDate.toISOString();
+    // Format the date in ISO format while preserving the local timezone
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hourStr = String(currentDate.getHours()).padStart(2, '0');
+    const minuteStr = String(currentDate.getMinutes()).padStart(2, '0');
+    const secondStr = String(currentDate.getSeconds()).padStart(2, '0');
+    const isoString = `${year}-${month}-${day}T${hourStr}:${minuteStr}:${secondStr}`;
 
     // Create a synthetic event directly
     const input = document.createElement("input");
@@ -140,7 +157,7 @@ export const FormDate = memo(function FormDate({
     if (!value) return "";
 
     try {
-      const date = new Date(value);
+      const date = parseISO(value);
       if (isNaN(date.getTime())) return "";
 
       return format(date, type === "datetime" ? "PPP" : "PPP");
@@ -155,7 +172,7 @@ export const FormDate = memo(function FormDate({
     if (!value || type !== "datetime") return "";
 
     try {
-      const date = new Date(value);
+      const date = parseISO(value);
       if (isNaN(date.getTime())) return "";
 
       return format(date, "p"); // 12-hour format with AM/PM
@@ -170,7 +187,7 @@ export const FormDate = memo(function FormDate({
     if (!value) return undefined;
 
     try {
-      const date = new Date(value);
+      const date = parseISO(value);
       return isNaN(date.getTime()) ? undefined : date;
     } catch (e) {
       console.error("Error selecting date:", e);
