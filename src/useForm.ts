@@ -15,9 +15,7 @@ type BooleanFieldProps = {
 
 type TextFieldProps = {
   value: string;
-  onChange: (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 };
 
 // Updated to match FormMultiSelect component interface
@@ -35,11 +33,7 @@ type IsArray<T> = T extends any[] ? true : false;
 
 // Conditional type for field props based on the field type
 type FieldProps<T, K extends keyof T> = BaseFieldProps &
-  (IsBoolean<T[K]> extends true
-    ? BooleanFieldProps
-    : IsArray<T[K]> extends true
-      ? ArrayFieldProps
-      : TextFieldProps);
+  (IsBoolean<T[K]> extends true ? BooleanFieldProps : IsArray<T[K]> extends true ? ArrayFieldProps : TextFieldProps);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useForm<T extends Record<string, any>>(initialValues: T) {
@@ -48,7 +42,8 @@ export function useForm<T extends Record<string, any>>(initialValues: T) {
   const useField = <K extends keyof T>(name: K): FieldProps<T, K> => {
     // Extract complex expressions from dependency array
     const fieldValue = form.data[name];
-    const fieldError = form.errors[name];
+    // @ts-expect-error
+    const fieldError = form.errors[name as string];
 
     return useMemo(() => {
       const base = {
@@ -63,7 +58,8 @@ export function useForm<T extends Record<string, any>>(initialValues: T) {
           ...base,
           checked: fieldValue as boolean,
           onBooleanChange: (value: boolean) => {
-            form.setData(name, value as T[K]);
+            // @ts-expect-error
+            form.setData(name as string, value as T[K]);
           },
         } as unknown as FieldProps<T, K>;
       }
@@ -76,7 +72,8 @@ export function useForm<T extends Record<string, any>>(initialValues: T) {
           value: fieldValue as any[],
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onChange: (value: any[]) => {
-            form.setData(name, value as T[K]);
+            // @ts-expect-error
+            form.setData(name as string, value as T[K]);
           },
         } as unknown as FieldProps<T, K>;
       }
@@ -85,12 +82,9 @@ export function useForm<T extends Record<string, any>>(initialValues: T) {
       return {
         ...base,
         value: fieldValue as string,
-        onChange: (
-          e: ChangeEvent<
-            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-          >,
-        ) => {
-          form.setData(name, e.target.value as T[K]);
+        onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+          // @ts-expect-error
+          form.setData(name as string, e.target.value as T[K]);
         },
       } as unknown as FieldProps<T, K>;
     }, [fieldValue, fieldError, name]);
