@@ -4,7 +4,9 @@ import { clsx } from "clsx";
 
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & {
+    required?: boolean;
+  }
 >(({ className, ...props }, ref) => (
   <LabelPrimitive.Root
     ref={ref}
@@ -14,7 +16,10 @@ const Label = React.forwardRef<
       className,
     )}
     {...props}
-  />
+  >
+    {props.children}
+    {props.required && <span className={'text-destructive'}>*</span>}
+  </LabelPrimitive.Root>
 ));
 
 Label.displayName = LabelPrimitive.Root.displayName;

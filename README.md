@@ -17,7 +17,7 @@ This package provides a set of form components that integrate seamlessly with La
 A text input component that integrates with Inertia.js forms.
 
 ```tsx
-import { FormInput, useField } from "@codecn/inertia-field-input";
+import { FormInput } from "@codecn/inertia-field-input";
 
 // Basic usage
 <FormInput

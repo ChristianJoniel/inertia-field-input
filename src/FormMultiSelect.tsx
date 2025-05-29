@@ -1,4 +1,4 @@
-import React, { memo, useState, HTMLAttributes, FC, ReactElement } from "react";
+import React, { memo, useState, HTMLAttributes, FC, ReactElement, ChangeEvent } from "react";
 import { Label } from "./ui/Label";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/Popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "./ui/Command";
@@ -13,24 +13,26 @@ interface Option {
 }
 
 interface FormMultiSelectProps {
-  id: string;
-  value: string[];
-  onChange: (value: string[]) => void;
+  id?: string;
+  value?: string[];
+  onChange?: (value: string[]) => void;
   error?: string;
   label?: string;
   options: Option[];
   placeholder?: string;
   hideLabel?: boolean;
+  name?: string;
 }
 
-// // New interface for field object from useForm
-// interface FieldObject {
-//   name: string;
-//   id: string;
-//   value: string[];
-//   onChange: (value: string[]) => void;
-//   error?: string;
-// }
+// Interface for Inertia's useField object
+interface InertiaField {
+  name: string;
+  value: string[];
+  onChange: (value: string[]) => void;
+  error?: string;
+}
+
+type CombinedProps = FormMultiSelectProps & Partial<InertiaField>;
 
 export const FormMultiSelect = React.memo(function FormMultiSelect({
   id,
@@ -41,21 +43,29 @@ export const FormMultiSelect = React.memo(function FormMultiSelect({
   options,
   placeholder = 'Select options',
   hideLabel = false,
-}: FormMultiSelectProps) {
+  name,
+  ...props
+}: CombinedProps) {
   const [open, setOpen] = React.useState(false)
 
+  // Handle both direct props and Inertia field object
+  const fieldValue = value || (props as InertiaField).value || [];
+  const fieldError = error || (props as InertiaField).error;
+  const fieldId = id || name;
+  const handleChange = onChange || (props as InertiaField).onChange || (() => { });
+
   const toggleValue = (val: string) => {
-    if (value.includes(val)) {
-      onChange(value.filter((v) => v !== val))
+    if (fieldValue.includes(val)) {
+      handleChange(fieldValue.filter((v: string) => v !== val))
     } else {
-      onChange([...value, val])
+      handleChange([...fieldValue, val])
     }
   }
 
   return (
     <div className="grid gap-2">
       {label && (
-        <Label htmlFor={id} className={hideLabel ? 'sr-only' : ''}>
+        <Label htmlFor={fieldId} className={hideLabel ? 'sr-only' : ''}>
           {label}
         </Label>
       )}
@@ -67,8 +77,8 @@ export const FormMultiSelect = React.memo(function FormMultiSelect({
             role="combobox"
             className="w-full justify-start"
           >
-            {value.length > 0
-              ? `${value.length} selected`
+            {fieldValue.length > 0
+              ? `${fieldValue.length} selected`
               : placeholder}
           </Button>
         </PopoverTrigger>
@@ -83,7 +93,7 @@ export const FormMultiSelect = React.memo(function FormMultiSelect({
                   onSelect={() => toggleValue(option.value)}
                   className="cursor-pointer"
                 >
-                  <span className={value.includes(option.value) ? 'font-semibold' : ''}>
+                  <span className={fieldValue.includes(option.value) ? 'font-semibold' : ''}>
                     {option.label}
                   </span>
                 </CommandItem>
@@ -94,9 +104,9 @@ export const FormMultiSelect = React.memo(function FormMultiSelect({
       </Popover>
 
       {/* Selected badges */}
-      {value.length > 0 && (
+      {fieldValue.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-2">
-          {value.map((val) => {
+          {fieldValue.map((val: string) => {
             const selected = options.find((o) => o.value === val)
             return (
               <Badge key={val} variant="outline">
@@ -114,52 +124,7 @@ export const FormMultiSelect = React.memo(function FormMultiSelect({
         </div>
       )}
 
-      <InputError message={error} />
+      <InputError message={fieldError} />
     </div>
   )
 })
-
-
-// // New component that accepts a field object directly
-// const FormMultiSelectField: FC<
-//   {
-//     field: FieldObject;
-//     label?: string;
-//     options: Option[];
-//     placeholder?: string;
-//     hideLabel?: boolean;
-//   } & Omit<HTMLAttributes<HTMLDivElement>, "onChange">
-// > = memo(function FormMultiSelectField({
-//   field,
-//   label,
-//   options,
-//   placeholder = "Select options",
-//   hideLabel = false,
-//   ...props
-// }) {
-//   return (
-//     <FormMultiSelect
-//       id={field.id}
-//       value={field.value}
-//       onChange={field.onChange}
-//       options={options}
-//       placeholder={placeholder}
-//       error={field.error}
-//       label={label}
-//       hideLabel={hideLabel}
-//       {...props}
-//     />
-//   );
-// });
-
-// // Helper function to create a field that works with useForm
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// function createMultiSelectField(field: any) {
-//   return {
-//     label: field.label,
-//     name: field.name,
-//     value: field.value,
-//     onChange: field.onChange,
-//     error: field.error,
-//   };
-// }

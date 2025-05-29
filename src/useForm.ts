@@ -35,60 +35,61 @@ type IsArray<T> = T extends any[] ? true : false;
 type FieldProps<T, K extends keyof T> = BaseFieldProps &
   (IsBoolean<T[K]> extends true ? BooleanFieldProps : IsArray<T[K]> extends true ? ArrayFieldProps : TextFieldProps);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useForm<T extends Record<string, any>>(initialValues: T) {
-  const form = useInertiaForm<T>(initialValues);
+type FormData = {
+  [key: string]: string | boolean | any[];
+};
 
-  const useField = <K extends keyof T>(name: K): FieldProps<T, K> => {
-    // Extract complex expressions from dependency array
-    const fieldValue = form.data[name];
-    // @ts-expect-error
-    const fieldError = form.errors[name as string];
+function useField<T extends FormData, K extends keyof T>(
+  form: ReturnType<typeof useInertiaForm<T>>,
+  name: K
+): FieldProps<T, K> {
+  // Extract complex expressions from dependency array
+  const fieldValue = form.data[name];
+  // @ts-expect-error
+  const fieldError = form.errors[name as string];
 
-    return useMemo(() => {
-      const base = {
-        name: String(name),
-        id: String(name),
-        error: fieldError,
-      };
+  return useMemo(() => {
+    const base = {
+      name: String(name),
+      id: String(name),
+      error: fieldError,
+    };
 
-      // Check if the field is a boolean
-      if (typeof fieldValue === "boolean") {
-        return {
-          ...base,
-          checked: fieldValue as boolean,
-          onBooleanChange: (value: boolean) => {
-            // @ts-expect-error
-            form.setData(name as string, value as T[K]);
-          },
-        } as unknown as FieldProps<T, K>;
-      }
-
-      // Check if the field is an array
-      if (Array.isArray(fieldValue)) {
-        return {
-          ...base,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          value: fieldValue as any[],
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onChange: (value: any[]) => {
-            // @ts-expect-error
-            form.setData(name as string, value as T[K]);
-          },
-        } as unknown as FieldProps<T, K>;
-      }
-
-      // For non-boolean, non-array fields
+    if (typeof fieldValue === "boolean") {
       return {
         ...base,
-        value: fieldValue as string,
-        onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        checked: fieldValue as boolean,
+        onBooleanChange: (value: boolean) => {
           // @ts-expect-error
-          form.setData(name as string, e.target.value as T[K]);
+          form.setData(name as string, value as T[K]);
         },
       } as unknown as FieldProps<T, K>;
-    }, [fieldValue, fieldError, name]);
-  };
+    }
 
-  return { ...form, useField };
+    if (Array.isArray(fieldValue)) {
+      console.log("fieldValue", fieldValue);
+      return {
+        ...base,
+        value: fieldValue as any[],
+        onChange: (value: any[]) => {
+          // @ts-expect-error
+          form.setData(name as string, value as T[K]);
+        },
+      } as unknown as FieldProps<T, K>;
+    }
+
+    return {
+      ...base,
+      value: fieldValue as string,
+      onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        // @ts-expect-error
+        form.setData(name as string, e.target.value as T[K]);
+      },
+    } as unknown as FieldProps<T, K>;
+  }, [fieldValue, fieldError, name, form.setData]);
+}
+
+export function useForm<T extends FormData>(initialValues: T) {
+  const form = useInertiaForm<T>(initialValues);
+  return { ...form, useField: (name: keyof T) => useField(form, name) };
 }
